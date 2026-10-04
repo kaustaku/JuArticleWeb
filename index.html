@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/style.css"><title>Articles</title></head><body>
+<div class="hero"><canvas id="wave" aria-hidden="true"></canvas><div class="wrap">
+<h1>Fringe</h1><p>Articles and art from the JU Physics batch. Move your pointer over the waves to change the slit spacing.</p></div></div>
+<section><div class="wrap"><h2>Articles</h2><div class="list" id="list"></div></div></section>
+<section><div class="wrap"><h2>From the gallery</h2><div class="art" id="art"></div>
+<p><a class="btn ghost" href="/gallery.html">See all artwork</a></p></div></section>
+<script type="module">
+import {chrome,getArticles,articleItem,getArt,artFigure,lightbox} from './site.js';
+chrome('articles');
+getArticles().then(a=>list.innerHTML=a.map(articleItem).join('')||'<p class="empty">No articles yet.</p>');
+getArt().then(w=>{art.innerHTML=w.slice(0,6).map(artFigure).join('')||'<p class="empty">No artwork yet. Be the first to add one.</p>';lightbox(art)});
+const c=document.getElementById('wave'),x=c.getContext('2d'),cell=5,still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let W,H,gap=0.3,t=0;
+function size(){W=c.width=Math.ceil(c.clientWidth/cell);H=c.height=Math.ceil(c.clientHeight/cell)}
+addEventListener('resize',size);size();
+c.parentElement.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();gap=Math.min(.9,Math.max(.1,(e.clientY-r.top)/r.height))});
+function draw(){const dark=matchMedia('(prefers-color-scheme:dark)').matches,k=.9,s1=H*(.5-gap/2),s2=H*(.5+gap/2),sx=2;
+ x.fillStyle=dark?'#141d31':'#f9fafc';x.fillRect(0,0,W,H);
+ for(let i=0;i<W;i++)for(let j=0;j<H;j++){const r1=Math.hypot(i-sx,j-s1),r2=Math.hypot(i-sx,j-s2),
+  v=(Math.cos(k*r1-t)+Math.cos(k*r2-t))/2,a=Math.max(0,v)*Math.exp(-i/(W*1.1));
+  x.fillStyle=dark?`rgba(127,155,255,${a})`:`rgba(35,71,216,${a})`;x.fillRect(i,j,1,1)}
+ t+=.12;if(!still)requestAnimationFrame(draw)}
+draw();
+</script></body></html>

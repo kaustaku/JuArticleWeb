@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/style.css"><title></title></head><body>
+<main class="wrap"><article class="paper" id="paper"><p class="empty">Loading…</p></article>
+<section style="padding-top:8px"><h2>Comments</h2><div id="comments"></div></section></main>
+<script type="module">
+import {chrome,getArticles,fmtDate,comments} from './site.js';
+const slug=new URLSearchParams(location.search).get('slug');
+const a=(await getArticles()).find(x=>x.slug===slug);
+if(!a){chrome('articles');paper.innerHTML='<h1>Article not found</h1><p><a href="/">Back to all articles</a></p>';document.getElementById('comments').parentElement.remove()}
+else{document.title=a.title;chrome('articles');
+ const h=document.createElement('h1');h.textContent=a.title;
+ const m=document.createElement('div');m.className='meta';m.textContent=a.author+', '+fmtDate(a.date);
+ const p=document.createElement('p');p.textContent=a.summary;
+ const act=document.createElement('div');act.className='actions';
+ act.innerHTML='<a class="btn" target="_blank" rel="noopener"></a><a class="btn ghost" download></a>';
+ act.children[0].href=a.pdf;act.children[0].textContent='Open PDF';act.children[1].href=a.pdf;act.children[1].textContent='Download';
+ const f=document.createElement('iframe');f.className='pdf';f.src=a.pdf;f.title=a.title;
+ paper.replaceChildren(h,m,p,act,f);comments(a.slug)}
+</script></body></html>
