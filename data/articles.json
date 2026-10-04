@@ -1,0 +1,11 @@
+[
+  {
+    "slug": "welcome",
+    "title": "Welcome to Fringe",
+    "author": "JU Physics batch",
+    "date": "2026-10-04",
+    "summary": "A sample article. Replace this entry with your first real PDF.",
+    "pdf": "/articles/welcome.pdf",
+    "tags": ["announcement"]
+  }
+]
